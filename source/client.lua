@@ -411,6 +411,8 @@ RegisterNUICallback("viewRecords", function(data)
 
     -- Retrieve records from the server and add them to the UI.
     lib.callback("ND_MDT:viewRecords", false, function(result)
+        if not result or not next(result) then return end
+
         result.citizen = citizenData[data.id]
         if not result.citizen then
             local result2 = lib.callback.await("ND_MDT:nameSearchByCharacter", false, data.id)
@@ -661,10 +663,10 @@ end)
 
 local function getPlayerPostal()
     local postal = false
-    if GetResourceState("nearest-postal") == "started" then
-        postal = exports["nearest-postal"]:getPostal()
-    elseif GetResourceState("ModernHUD") == "started" then
+    if GetResourceState("ModernHUD") == "started" then
         postal = exports["ModernHUD"]:getPostal()
+    elseif GetResourceState("nearest-postal") == "started" then
+        postal = exports["nearest-postal"]:getPostal()
     end
     return postal
 end
